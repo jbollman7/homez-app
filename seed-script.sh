@@ -129,7 +129,7 @@ echo "$json_data" | jq -c '.[]' | while read entry; do
     state=$(echo $entry | jq '.state')
     wifi=$(echo $entry | jq '.wifi')
 
-    #sqlite3 housing.db "INSERT INTO house_table(id, name, availableUnits, city, laundry, photo, state, wifi) VALUES ($id, '$name', $availableUnits, '$city', $laundry, '$photo', '$state', $wifi);"
+    sqlite3 housing.db "INSERT INTO house_table(name, availableUnits, city, laundry, photo, state, wifi) VALUES ('$name', $availableUnits, '$city', $laundry, '$photo', '$state', $wifi);"
 done
 
 echo "Database and table created, and data inserted successfully."
