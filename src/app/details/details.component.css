@@ -45,6 +45,10 @@ li {
   font-size: 18pt;
   margin-bottom: 15px;
 }
+.no-units-available {
+  color: red;
+  font-size: 12pt;
+}
 
 label, input {
   display: block;
