@@ -4,13 +4,14 @@ import { DetailsComponent } from './details/details.component';
 
 export const routes: Routes = [
   {
-    component: HomeComponent,
     path: '',
+    component: HomeComponent,
     title: 'Homey Page'
   },
   {
-    component: DetailsComponent,
     path: 'details/:id',
+    //component: DetailsComponent,
+    loadComponent: () => import('./details/details.component').then((d) => d.DetailsComponent),
     title: 'Details Page'
   }
 
