@@ -1,23 +1,46 @@
-import { inject, Injectable } from '@angular/core';
+import { Inject, inject, Injectable } from '@angular/core';
 import { HousingLocation } from '../housing-location';
 import { DatabaseService } from './database.service';
+import { Observable, pipe } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators'
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HousingService {
 
-  databaseService: DatabaseService = inject(DatabaseService);
+  //databaseService: DatabaseService = inject(DatabaseService);
   protected housingLocationList: HousingLocation[] = [];
-  constructor() { }
+  constructor(@Inject(HttpClient) private readonly http: HttpClient
+  ) {}
 
-  getAllHousingLocations(): HousingLocation[] {
-    //return this.housingLocationList;
-    return this.databaseService.getAllHousingLocations();
+  readonly API_PATH = 'http://localhost:8080'
+
+
+  public GetAllHousingListings(): Observable<Object> {
+        return this.http.get(`${this.API_PATH}/listings`)
+            .pipe(
+                tap((response) => {
+                  return response
+                }),
+                catchError((error) => {
+                    throw error;
+                })
+            );
   }
 
-  getHousingLocationById(id: Number): HousingLocation | undefined {
-    return this.housingLocationList.find(x => x.id === id);
+  public GetHousingLocationById(id: Number): Observable<Object> {
+
+        return this.http.get(`${this.API_PATH}/listings/${id}`)
+            .pipe(
+                tap((response) => {
+                  return response
+                }),
+                catchError((error) => {
+                    throw error;
+                })
+            );
   }
 
   submitApplication(firstName: string, lastName: string, email: string): void {

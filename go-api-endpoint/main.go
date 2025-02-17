@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
@@ -64,16 +65,16 @@ func startServer(db *sql.DB) {
 	// Use the dbMiddleware to set up the database connection
 	router.Use(dbMiddleware(db))
 
-	router.GET("/listings", getListings)
+	router.GET("/listings", getAllListings)
+	router.GET("/listings/:id", getListingByID)
 
 	router.Run("localhost:8080")
 }
 
-// getlistings responds with the list of all albums as JSON
-func getListings(c *gin.Context) {
-	//c.IndentedJSON(http.StatusOK, listings)
-	//c.IndentedJSON(http.StatusOK, getListingsFromDB(db))
-	listings, err := getListingsFromDB(c)
+// getlistings responds with the list of all listings
+// API ENDPOINT
+func getAllListings(c *gin.Context) {
+	listings, err := getAllListingsFromDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -83,8 +84,31 @@ func getListings(c *gin.Context) {
 
 }
 
+// Get specific record Endpont
+func getListingByID(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	listing, err := getSpecificListingFromDB(c, int32(id))
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	if listing == nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	c.JSON(http.StatusOK, listing)
+}
+
 // getListings retrieves listings from the database
-func getListingsFromDB(c *gin.Context) ([]listing, error) {
+func getAllListingsFromDB(c *gin.Context) ([]listing, error) {
 	db, exists := c.Get(dbKey)
 	if !exists {
 		return nil, fmt.Errorf("database connection not found")
@@ -113,6 +137,31 @@ func getListingsFromDB(c *gin.Context) ([]listing, error) {
 	return listings, nil
 }
 
+func getSpecificListingFromDB(c *gin.Context, id int32) (*listing, error) {
+	db, exists := c.Get(dbKey)
+	if !exists {
+		return nil, fmt.Errorf("database connection not found")
+	}
+
+	sqlDB, ok := db.(*sql.DB)
+	if !ok {
+		return nil, fmt.Errorf("invalid database connection type")
+	}
+
+	row := sqlDB.QueryRow("SELECT id, name, units, city, laundry, photo, rental, state, wifi FROM houses WHERE id = ?", id)
+
+	var listing listing
+	err := row.Scan(&listing.ID, &listing.Name, &listing.Units, &listing.City, &listing.Laundry, &listing.Photo, &listing.Rental, &listing.State, &listing.Wifi)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil // No matching row found
+		}
+		return nil, err
+	}
+
+	return &listing, nil
+}
+
 func main() {
 
 	// Connect to db
@@ -123,8 +172,4 @@ func main() {
 	defer db.Close()
 	startServer(db)
 
-	// router := gin.Default()
-	// router.GET("/listings", getListings)
-	//
-	// router.Run("localhost:8080")
 }
