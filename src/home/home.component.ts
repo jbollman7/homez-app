@@ -5,6 +5,7 @@ import { HousingService } from '../app/housing.service';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [HousingLocationComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -14,6 +15,10 @@ export class HomeComponent {
   housingService: HousingService = inject(HousingService);
 
   constructor() {
-    this.housingLocationList = this.housingService.getAllHousingLocations();
+    this.housingService.GetAllHousingListings().subscribe(
+      (housingLocation) => {
+        this.housingLocationList = housingLocation
+      }
+    )
   }
 }

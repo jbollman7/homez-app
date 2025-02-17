@@ -5,24 +5,24 @@
     <p class="listing-location"> {{housingLocation?.city}}, {{housingLocation?.state}}</p>
   </section>
   <section class="listing-features">
-    @if (housingLocation && housingLocation.availableUnits > 0)  {
+    @if (housingLocation && housingLocation.units> 0)  {
       <h2 class="section-heading">
         About this housing location
       </h2>
     }
     <ul>
-      @if (housingLocation!.availableUnits === 0) {
+      @if (housingLocation && housingLocation!.units === 0) {
         <li class="no-units-available">No available units!</li>
       }
       @else {
-        <li>Units available: {{housingLocation!.availableUnits}}</li>
+        <li>Units available: {{housingLocation?.units}}</li>
       }
       <li>Does this location have wifi: {{housingLocation?.wifi}}</li>
       <li>Does this location have laundry: {{housingLocation?.laundry}}</li>
     </ul>
   </section>
   <section class="listing-apply">
-    @if (housingLocation && housingLocation.availableUnits > 0)  {
+    @if (housingLocation && housingLocation.units> 0)  {
     <form [formGroup]="applyForm" (ngSubmit)="submitApplication()">
     <h2 class="section-heading"> Apply now to live here</h2>
       <label for="first-name">First Name</label>

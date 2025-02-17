@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 )
@@ -23,33 +24,9 @@ type listing struct {
 	Wifi    bool   `json:"wifi"`
 }
 
-// var listings = []listing{
-// 	{
-// 		ID:      8,
-// 		Name:    "Condos & More",
-// 		Units:   10,
-// 		City:    "Atlanta",
-// 		Laundry: false,
-// 		Photo:   "/assets/saru-robert-9rP3mxf8qWI-unsplash.jpg",
-// 		Rental:  false,
-// 		State:   "GA",
-// 		Wifi:    false,
-// 	},
-// 	{
-// 		ID:      9,
-// 		Name:    "Capital Safe Towns",
-// 		Units:   6,
-// 		City:    "Portland",
-// 		Laundry: true,
-// 		Photo:   "/assets/webaliser-_TPTXZd9mOo-unsplash.jpg",
-// 		Rental:  true,
-// 		State:   "OR",
-// 		Wifi:    true,
-// 	},
-// }
-
 // Database key for Gin context
 const dbKey = "db"
+
 
 // Middleware to set up the database connection
 func dbMiddleware(db *sql.DB) gin.HandlerFunc {
@@ -61,6 +38,16 @@ func dbMiddleware(db *sql.DB) gin.HandlerFunc {
 
 func startServer(db *sql.DB) {
 	router := gin.Default()
+
+	// Use the CORS middleware
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:4200"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * 60 * 60, // 12 hours
+	}))
 
 	// Use the dbMiddleware to set up the database connection
 	router.Use(dbMiddleware(db))
