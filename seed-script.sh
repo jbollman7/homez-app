@@ -3,7 +3,7 @@
 # Define the JSON array
 json_data='[
     {
-        "id": 0,
+        "id": 1,
         "name": "Acme Fresh Start Housing",
         "units": 4,
         "city": "Chicago",
@@ -14,7 +14,7 @@ json_data='[
         "wifi": true
     },
     {
-        "id": 1,
+        "id": 2,
         "name": "Sky High Housing",
         "units": 0,
         "city": "San Diego",
@@ -25,7 +25,7 @@ json_data='[
         "wifi": false
     },
     {
-        "id": 2,
+        "id": 3,
         "name": "Bed and Breakfast",
         "units": 1,
         "city": "Casper",
@@ -36,7 +36,7 @@ json_data='[
         "wifi": false
     },
     {
-        "id": 3,
+        "id": 4,
         "name": "Suburban Housing",
         "units": 1,
         "city": "Chicago",
@@ -47,7 +47,7 @@ json_data='[
         "wifi": true
     },
     {
-        "id": 4,
+        "id": 5,
         "name": "Happy Homes Group",
         "units": 1,
         "city": "Salina",
@@ -58,7 +58,7 @@ json_data='[
         "wifi": true
     },
     {
-        "id": 5,
+        "id": 6,
         "name": "Hopeful Apartment Group",
         "units": 2,
         "city": "Kansas City",
@@ -69,7 +69,7 @@ json_data='[
         "wifi": true
     },
     {
-        "id": 6,
+        "id": 7,
         "name": "Seriously Safe Towns",
         "units": 5,
         "city": "Manhattan",
@@ -80,7 +80,7 @@ json_data='[
         "wifi": true
     },
     {
-        "id": 7,
+        "id": 8,
         "name": "Modern Homes",
         "units": 2,
         "city": "Lawrence",
@@ -91,7 +91,7 @@ json_data='[
         "wifi": true
     },
     {
-        "id": 8,
+        "id": 9,
         "name": "Condos & More",
         "units": 10,
         "city": "Atlanta",
@@ -102,7 +102,7 @@ json_data='[
         "wifi": false
     },
     {
-        "id": 9,
+        "id": 10,
         "name": "Capital Safe Towns",
         "units": 6,
         "city": "Portland",
@@ -134,13 +134,14 @@ echo "$json_data" | jq -c '.[]' | while read entry; do
     id=$(echo $entry | jq '.id')
     name=$(echo $entry | jq -r '.name')
     units=$(echo $entry | jq '.units')
-    city=$(echo $entry | jq '.city')
+    city=$(echo $entry | jq -r '.city')
     laundry=$(echo $entry | jq '.laundry')
     photo=$(echo $entry | jq '.photo')
     rental=$(echo $entry | jq '.rental')
-    state=$(echo $entry | jq '.state')
+    state=$(echo $entry | jq -r '.state')
     wifi=$(echo $entry | jq '.wifi')
 
+    echo $entry
     sqlite3 housing.db "INSERT INTO houses(name, units, city, laundry, photo, rental, state, wifi) VALUES ('$name', $units, '$city', $laundry, '$photo', $rental, '$state', $wifi);"
 done
 
