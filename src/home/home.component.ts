@@ -5,7 +5,6 @@ import { HousingService } from '../app/housing.service';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
   imports: [HousingLocationComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

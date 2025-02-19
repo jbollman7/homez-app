@@ -136,12 +136,12 @@ echo "$json_data" | jq -c '.[]' | while read entry; do
     units=$(echo $entry | jq '.units')
     city=$(echo $entry | jq -r '.city')
     laundry=$(echo $entry | jq '.laundry')
-    photo=$(echo $entry | jq '.photo')
+    photo=$(echo $entry | jq -r '.photo')
     rental=$(echo $entry | jq '.rental')
     state=$(echo $entry | jq -r '.state')
     wifi=$(echo $entry | jq '.wifi')
 
-    echo $entry
+    echo $photo | tr -d '"'
     sqlite3 housing.db "INSERT INTO houses(name, units, city, laundry, photo, rental, state, wifi) VALUES ('$name', $units, '$city', $laundry, '$photo', $rental, '$state', $wifi);"
 done
 
