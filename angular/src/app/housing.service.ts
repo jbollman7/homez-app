@@ -12,7 +12,7 @@ export class HousingService {
   constructor(@Inject(HttpClient) private readonly http: HttpClient
   ) {}
 
-  readonly API_PATH = 'http://localhost:8080'
+  readonly API_PATH = 'http://backend:8080'
 
 
   public GetAllHousingListings(): Observable<HousingLocation[]> {
