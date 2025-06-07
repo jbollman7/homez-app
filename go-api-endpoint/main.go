@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-contrib/cors"
+	//"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 )
@@ -40,14 +40,14 @@ func startServer(db *sql.DB) {
 	router := gin.Default()
 
 	// Use the CORS middleware
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * 60 * 60, // 12 hours
-	}))
+	// router.Use(cors.New(cors.Config{
+	// 	AllowOrigins:     []string{"0.0.0.0:4200"},
+	// 	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	// 	AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+	// 	ExposeHeaders:    []string{"Content-Length"},
+	// 	AllowCredentials: true,
+	// 	MaxAge:           12 * 60 * 60, // 12 hours
+	// }))
 
 	// Use the dbMiddleware to set up the database connection
 	router.Use(dbMiddleware(db))
@@ -55,7 +55,7 @@ func startServer(db *sql.DB) {
 	router.GET("/listings", getAllListings)
 	router.GET("/listings/:id", getListingByID)
 
-	router.Run("localhost:8080")
+	router.Run("0.0.0.0:8080")
 }
 
 // getlistings responds with the list of all listings
