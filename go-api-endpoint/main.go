@@ -42,7 +42,6 @@ func startServer(db *sql.DB) {
 	// Use the CORS middleware
 	router.Use(cors.New(cors.Config{
     AllowOrigins: []string{"*"},
-		//AllowOrigins:     []string{"frontend:4200"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},

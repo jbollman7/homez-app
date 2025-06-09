@@ -1,6 +1,6 @@
 {
   "/listings/**": {
-    "target": "http://localhost:4200",
+    "target": "http://backend:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
