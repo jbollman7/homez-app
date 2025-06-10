@@ -5,7 +5,7 @@ services:
     image: docker.io/jbollman/homez-app-repo:angular
     container_name: frontend-container
     ports:
-      - "4200:4200"
+      - "4200:80"
     depends_on:
       - backend
     networks:
