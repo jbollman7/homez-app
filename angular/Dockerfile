@@ -1,4 +1,7 @@
-FROM node:24-alpine3.22
+#FROM node:24-alpine3.22
+FROM busybox:latest
+
+#B
 
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
